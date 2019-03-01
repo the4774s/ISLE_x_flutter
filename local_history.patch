@@ -1,0 +1,442 @@
+Index: lib/main.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/main.dart	(date 1551268152615)
++++ lib/main.dart	(date 1551268152615)
+@@ -1,6 +1,7 @@
+ import 'package:flutter/material.dart';
+ import 'package:isle_x_flutter/ui/progressCard.dart';
+ import 'package:flutter/services.dart';
++import 'dart:math';
+ 
+ Color isleFeatherlight = const Color(0xFFFAFAFA);
+ Color isleYell = const Color(0xFFFFB93B);
+@@ -8,23 +9,18 @@
+ Color isleWaters = const Color(0xFF009684);
+ Color isleNightsky = const Color(0xFF161623);
+ Color textSecondaryText =
+-    const Color(0xFF6B6B6B); //skip now button, bottom notices, xp points etc.
++const Color(0xFF6B6B6B); //skip now button, bottom notices, xp points etc.
+ Color textGray = const Color(0xFF8B8B8B);
+ Color isleGrayIcons = const Color(0xFFC4C4C4);
+ Color textGrayLight = const Color(0xFFE1DAE1);
+ Color isleInactiveIslands =
+-    const Color(0xFFE8E8E8); //yes we need them all the grays.
++const Color(0xFFE8E8E8); //yes we need them all the grays.
+ Color facebookButton = const Color(0xFF4D63A4);
+ Color googleButton = const Color(0xFFFD3B4A);
+ 
+ final key = new GlobalKey<
+     ProgressCardState>(); //i make a key and i assign it to the object i create later.//thus, if i need to access that objects state in my main code, i can call it by key.currentState.variables
+ 
+-//i get all the data from previous screen and initialize this one appropriately:
+-//String persona = initializeActivitiesPage()[0];
+-//int level = int.tryParse(initializeActivitiesPage()[1]);
+-//double percent = double.tryParse(initializeActivitiesPage()[2]);
+-
+ String persona = 'MITSOS';
+ 
+ void main() => runApp(MyApp());
+@@ -54,6 +50,7 @@
+ }
+ 
+ class _MyHomePageState extends State<MyHomePage> {
++
+   @override
+   Widget build(BuildContext context) {
+     return Scaffold(
+@@ -83,18 +80,24 @@
+                   key: key,
+                   experience: 0,
+                   level:
+-                      1), //TODO: pass user experience points. this widget has progress bar + number (experience, level, percent) and calculates user progress/percent/level and updates them real time
++                  1), //TODO: pass user experience points. this widget has progress bar + number (experience, level, percent) and calculates user progress/percent/level and updates them real time
+             ]),
+           ),
+           title: Column(
+             mainAxisAlignment: MainAxisAlignment.center,
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: <Widget>[
+-              Text(widget.title, style: Theme.of(context).textTheme.headline),
++              Text(widget.title, style: Theme
++                  .of(context)
++                  .textTheme
++                  .headline),
+               Visibility(
+                 visible: true,
+                 child: Text("In the morning would",
+-                    style: Theme.of(context).textTheme.subtitle),
++                    style: Theme
++                        .of(context)
++                        .textTheme
++                        .subtitle),
+               )
+             ],
+           ),
+@@ -104,7 +107,9 @@
+                 child: IconButton(
+                   icon: Icon(
+                     Icons.settings,
+-                    color: Theme.of(context).hintColor,
++                    color: Theme
++                        .of(context)
++                        .hintColor,
+                   ),
+                   tooltip: 'Increase progress by 10%',
+                   onPressed: () {
+@@ -133,15 +138,22 @@
+   return Column(
+     mainAxisSize: MainAxisSize.min,
+     children: <Widget>[
+-//      Text('Carousel $carouselIndex'),
+       SizedBox(
+         // you may want to use an aspect ratio here for tablet support
+-        height: MediaQuery.of(context).size.height / 1.7,
+-        width: MediaQuery.of(context).size.width,
++        height: MediaQuery
++            .of(context)
++            .size
++            .height / 1.7,
++        width: MediaQuery
++            .of(context)
++            .size
++            .width,
+         child: PageView.builder(
+           onPageChanged: updateDot(carouselIndex),
+           // store this controller in a State to save the carousel scroll position
+-          controller: PageController(initialPage: 1, viewportFraction: 0.8),
++//          physics: new AlwaysScrollableScrollPhysics(),
++
++          controller: PageController(viewportFraction: 0.8,initialPage: 1),
+           physics: BouncingScrollPhysics(),
+           itemBuilder: (BuildContext context, int itemIndex) {
+             return _buildCarouselItem(context, carouselIndex, itemIndex);
+@@ -157,9 +169,11 @@
+   //TODO:do stuff to measure impressio
+ }
+ 
+-Widget _buildCarouselItem(
+-    BuildContext context, int carouselIndex, int itemIndex) {
+-  return Padding(
++Widget _buildCarouselItem(BuildContext context, int carouselIndex,
++    int itemIndex) {
++  return
++    Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
++    Padding(
+       padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+       child: Container(
+         decoration: BoxDecoration(
+@@ -173,147 +187,167 @@
+           ],
+           borderRadius: BorderRadius.all(Radius.circular(30.0)),
+         ),
+-        child: Padding(
+-            padding: EdgeInsets.fromLTRB(20.0, 5, 20, 5),
+-            child: Column(children: <Widget>[
+-              Expanded(
+-                flex: 8,
+-                child: Container(
+-                    constraints: BoxConstraints.expand(),
+-//              color: Colors.pink,
+-                    child: Padding(
+-                      padding: EdgeInsets.all(0.0),
+-                      child: Center(
+-                        child: Text(
+-                          'Swim at Vaporia under the famous St. Nicolas church',
+-                          style: Theme.of(context).textTheme.title,
+-                        ),
+-                      ),
+-                    )),
+-              ),
+-              Expanded(
+-                flex: 8,
+-                child: Container(
+-                    constraints: BoxConstraints.expand(),
+-//                color: Colors.pinkAccent,
+-                    child: Row(
+-                      children: <Widget>[
+-                        Expanded(
+-                            flex: 1,
+-                            child: Container(
+-                                constraints: BoxConstraints.expand(),
+-//                            color: Colors.purpleAccent,
+-                                child: Column(
+-                                  crossAxisAlignment: CrossAxisAlignment.start,
+-                                  mainAxisAlignment: MainAxisAlignment.end,
+-                                  children: <Widget>[
+-                                    RichText(
+-                                      text: new TextSpan(
+-                                        children: <TextSpan>[
+-                                          new TextSpan(
+-                                              text: '€',
+-                                              style: Theme.of(context)
+-                                                  .textTheme
+-                                                  .display1),
+-                                          new TextSpan(
+-                                              text: '€',
+-                                              style: Theme.of(context)
+-                                                  .textTheme
+-                                                  .display1),
+-                                          new TextSpan(
+-                                              text: '€',
+-                                              style: Theme.of(context)
+-                                                  .textTheme
+-                                                  .display4),
+-                                        ],
+-                                      ),
+-                                    ),
+-
+-                                    RichText(
+-                                      text: new TextSpan(
+-                                        children: <TextSpan>[
+-                                          new TextSpan(
+-                                              text: '15',
+-                                              style: Theme.of(context)
+-                                                  .textTheme
+-                                                  .display3),
+-                                          new TextSpan(
+-                                              text: 'min',
+-                                              style: Theme.of(context)
+-                                                  .textTheme
+-                                                  .display3),
+-                                        ],
+-                                      ),
+-                                    ),
+-
+-                                    Text('15min',
+-                                        style: Theme.of(context)
+-                                            .textTheme
+-                                            .display3),
+-                                    Text('200xp',
+-                                        style: Theme.of(context)
+-                                            .textTheme
+-                                            .display3),
+-                                  ],
+-                                )
+-
+-//                                Center(
++//        child: Padding(
++//            padding: EdgeInsets.fromLTRB(20.0, 5, 20, 5),
++//            child:
++//            Column(children: <Widget>[
++//              Expanded(
++//                flex: 8,
++//                child: Container(
++//                    constraints: BoxConstraints.expand(),
++////              color: Colors.pink,
++//                    child: Padding(
++//                      padding: EdgeInsets.all(0.0),
++//                      child: Center(
++//                        child: Text(
++//                          'Swim at Vaporia under the famous St. Nicolas church',
++//                          style: Theme
++//                              .of(context)
++//                              .textTheme
++//                              .title,
++//                        ),
++//                      ),
++//                    )),
++//              ),
++//              Expanded(
++//                flex: 8,
++//                child: Container(
++//                    constraints: BoxConstraints.expand(),
++////                color: Colors.pinkAccent,
++//                    child: Row(
++//                      children: <Widget>[
++//                        Expanded(
++//                            flex: 1,
++//                            child: Container(
++//                                constraints: BoxConstraints.expand(),
++////                            color: Colors.purpleAccent,
++//                                child: Column(
++//                                  crossAxisAlignment: CrossAxisAlignment.start,
++//                                  mainAxisAlignment: MainAxisAlignment.end,
++//                                  children: <Widget>[
++//                                    RichText(
++//                                      text: new TextSpan(
++//                                        children: <TextSpan>[
++//                                          new TextSpan(
++//                                              text: '€',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display1),
++//                                          new TextSpan(
++//                                              text: '€',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display1),
++//                                          new TextSpan(
++//                                              text: '€',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display4),
++//                                        ],
++//                                      ),
++//                                    ),
++//
++//                                    RichText(
++//                                      text: new TextSpan(
++//                                        children: <TextSpan>[
++//                                          new TextSpan(
++//                                              text: '15',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display3),
++//                                          new TextSpan(
++//                                              text: 'min',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display3),
++//                                        ],
++//                                      ),
++//                                    ),
++//
++//                                    RichText(
++//                                      text: new TextSpan(
++//                                        children: <TextSpan>[
++//                                          new TextSpan(
++//                                              text: '200',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display3),
++//                                          new TextSpan(
++//                                              text: 'xp',
++//                                              style: Theme
++//                                                  .of(context)
++//                                                  .textTheme
++//                                                  .display3),
++//                                        ],
++//                                      ),
++//                                    ),
++//                                  ],
++//                                )
++//
++////                                Center(
++////                                  child: Text(
++////                                    '2',
++////                                    style: TextStyle(
++////                                        fontSize: 32.0, color: Colors.black87),
++////                                  ),
++////                                )
++//                            )),
++//                        Expanded(
++//                            flex: 1,
++//                            child: Container(
++//                                constraints: BoxConstraints.expand(),
++//                                child: Center(
+ //                                  child: Text(
+-//                                    '2',
++//                                    '3',
+ //                                    style: TextStyle(
+ //                                        fontSize: 32.0, color: Colors.black87),
+ //                                  ),
+-//                                )
+-                                )),
+-                        Expanded(
+-                            flex: 1,
+-                            child: Container(
+-                                constraints: BoxConstraints.expand(),
+-                                child: Center(
+-                                  child: Text(
+-                                    '3',
+-                                    style: TextStyle(
+-                                        fontSize: 32.0, color: Colors.black87),
+-                                  ),
+-                                ))),
+-                      ],
+-                    )),
+-              ),
+-              Expanded(
+-                flex: 5,
+-                child: Container(
+-                    constraints: BoxConstraints.expand(),
+-//                color: Colors.pinkAccent,
+-                    child: Row(
+-                      children: <Widget>[
+-                        Expanded(
+-                            flex: 2,
+-                            child: Container(
+-                                constraints: BoxConstraints.expand(),
+-//                            color: Colors.purpleAccent,
+-                                child: Center(
+-                                  child: Text(
+-                                    '4',
+-                                    style: TextStyle(
+-                                        fontSize: 32.0, color: Colors.black87),
+-                                  ),
+-                                ))),
+-                        Expanded(
+-                            flex: 1,
+-                            child: Container(
+-                                constraints: BoxConstraints.expand(),
+-                                child: Center(
+-                                  child: Text(
+-                                    '5',
+-                                    style: TextStyle(
+-                                        fontSize: 32.0, color: Colors.black87),
+-                                  ),
+-                                ))),
+-                      ],
+-                    )),
+-              ),
+-            ])),
+-      ));
++//                                ))),
++//                      ],
++//                    )),
++//              ),
++//              Expanded(
++//                flex: 5,
++//                child: Container(
++//                    constraints: BoxConstraints.expand(),
++////                color: Colors.pinkAccent,
++//                    child: Row(
++//                      children: <Widget>[
++//                        Expanded(
++//                            flex: 2,
++//                            child: Container(
++//                                constraints: BoxConstraints.expand(),
++////                            color: Colors.purpleAccent,
++//                                child: Center(
++//                                  child: Text(
++//                                    '4',
++//                                    style: TextStyle(
++//                                        fontSize: 32.0, color: Colors.black87),
++//                                  ),
++//                                ))),
++//                        Expanded(
++//                            flex: 1,
++//                            child: Container(
++//                                constraints: BoxConstraints.expand(),
++//                                child: Center(
++//                                  child: Text(
++//                                    '5',
++//                                    style: TextStyle(
++//                                        fontSize: 32.0, color: Colors.black87),
++//                                  ),
++//                                ))),
++//                      ],
++//                    )),
++//              ),
++//            ])
++//        ),
++      ))]);
+ }
+ 
+ ThemeData getIsleThemeData() {
+@@ -374,5 +408,5 @@
+           button: TextStyle(
+               fontFamily: 'FiraSansCondensed',
+               fontWeight: FontWeight.w800) //button
+-          ));
++      ));
+ }
